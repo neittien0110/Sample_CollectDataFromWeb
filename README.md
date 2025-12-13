@@ -71,3 +71,37 @@ __Hỗ trợ__: công cụ phân tích cấu trúc json và tạo đường dẫ
 Chương trình được sinh từ lời Prompt cho Google Gemini:
 > Hãy viết một chương trình python để đọc tỷ giá hối đoái từ URL https://techcombank.com/content/techcombank/web/vn/vi/cong-cu-tien-ich/ty-gia/_jcr_content.exchange-rates.integration.json.
 Lưu phần phần key $.exchangeRate.data vào một mảng có cấu trúc
+
+## Thu thập từ trang WebAPI qua HTTP Get
+
+Đọc dữ liệu điện mặt trời mái nhà từ URL <https://www.nsmo.vn/Dashboard/GetSoLieuCongSuatMtmn>
+
+Chạy chương trình
+
+```shell
+    python ./nsmo_rooftopsolar_extractor.py
+```
+
+Kết quả
+
+```text
+=======================================================
+KẾT QUẢ TÁI CẤU TRÚC DỮ LIỆU CÔNG SUẤT ĐIỆN MẶT TRỜI
+=======================================================
+Đã trích xuất 5 series dữ liệu.
+
+--- Series đầu tiên: 'EVNNPC' ---
+Tổng số điểm dữ liệu: 240
+20 điểm dữ liệu đầu tiên:
+  1: {'value': 0.0, 'time': '2025-12-08T00:30:00'}
+  2: {'value': 0.0, 'time': '2025-12-08T01:00:00'}
+  3: {'value': 0.0, 'time': '2025-12-08T01:30:00'}
+  4: {'value': 0.0, 'time': '2025-12-08T02:00:00'}
+  5: {'value': 0.0, 'time': '2025-12-08T02:30:00'}
+...
+=======================================================
+```
+
+Chương trình được sinh từ lời Prompt cho Google Gemini:
+> Hãy viết một chương trình python để công suất điện mặt trời mái nhà https://www.nsmo.vn/Dashboard/GetSoLieuCongSuatMtmn
+Lưu phần phần key x.result.data vào một mảng có cấu trúc dạng {name, data}.  Sau đó bóc tách sâu hơn với các key $.result.data[i].data thì lưu vào mảng con bên trong với cấu trúc {value, time}.
