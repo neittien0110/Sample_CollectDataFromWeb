@@ -105,3 +105,19 @@ Tổng số điểm dữ liệu: 240
 Chương trình được sinh từ lời Prompt cho Google Gemini:
 > Hãy viết một chương trình python để công suất điện mặt trời mái nhà https://www.nsmo.vn/Dashboard/GetSoLieuCongSuatMtmn
 Lưu phần phần key x.result.data vào một mảng có cấu trúc dạng {name, data}.  Sau đó bóc tách sâu hơn với các key $.result.data[i].data thì lưu vào mảng con bên trong với cấu trúc {value, time}.
+
+## ĐỒng bộ dữ liệu từ Web vào bảng tính trong Excel
+
+- Excel cho phép phân tích nội dung từ các trang web, đặc biệt là payload từ các WebAPI và chuyển đổi thành một bảng số liệu trong Excel
+- Bảng dữ liệu đó được tự động cập nhật khi
+  - File Excel mới được mở
+  - Bấm nút Refresh trên giao diện
+  - Tự động sau mỗi xx phút.
+
+![GetData](./assets/getdata.png)
+
+Chức năng"Get Data" trong Excel (còn gọi là Lấy Dữ liệu hoặc Get & Transform Data) là công cụ mạnh mẽ giúp nhập dữ liệu từ nhiều nguồn khác nhau (Web, file, database,...)
+
+File kết quả [ở đây](./nsmo_webdata.xlsx)
+
+![Loại hình và sản lượng](./assets/loaihinh2sheet.png)
