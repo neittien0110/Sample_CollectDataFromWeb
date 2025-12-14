@@ -121,3 +121,7 @@ Chức năng"Get Data" trong Excel (còn gọi là Lấy Dữ liệu hoặc G
 File kết quả [ở đây](./nsmo_webdata.xlsx)
 
 ![Loại hình và sản lượng](./assets/loaihinh2sheet.png)
+
+## Phụ lục
+
+==> [Kết nối với CSDL SQL Server](./README.DB.md)
