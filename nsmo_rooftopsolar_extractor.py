@@ -1,6 +1,8 @@
 import requests
 import json
+import sys
 from typing import List, Dict, Any, Optional
+from dbstorage import DBInit, DBClose, get_source_id, DBWrite_CongSuatMTMN
 
 # URL API
 API_URL = "https://www.nsmo.vn/Dashboard/GetSoLieuCongSuatMtmn"
@@ -114,3 +116,61 @@ if __name__ == "__main__":
         print("=======================================================")
     else:
         print("\nKhông thể trích xuất hoặc tái cấu trúc dữ liệu.")
+        sys.exit(1)
+
+    # 1. Kết nối cơ sở dữ liệu
+    db_conn = DBInit()
+    if not db_conn:
+        sys.exit(1);
+        
+    # 3. Xử lý và Ghi dữ liệu vào DB
+    total_records = 0
+    print("\nBắt đầu ghi dữ liệu vào SQL Server...")
+    for series in restructured_data:
+        source_name = series['name']
+        restructured_series_data = series['data']
+        
+        # 3.1. Tìm Source ID (DataSource_Header.source_id)
+        source_fk = get_source_id(source_name)
+        if source_fk is None:
+            continue
+            
+        # 3.2. Ghi từng bản ghi (measurement) vào bảng CongSuatMTMN
+        records_processed = 0
+        for record in restructured_series_data:
+            value = record['value']
+            time = record['time']
+            
+            # Gọi hàm ghi DB, bao gồm kiểm tra trùng lặp
+            if DBWrite_CongSuatMTMN(source_fk, value, time):
+                records_processed += 1
+        
+        total_records += records_processed
+        print(f"  Series '{source_name}' (ID: {source_fk}): Đã xử lý {len(restructured_series_data)} bản ghi, ghi mới/bỏ qua {records_processed} bản.")
+
+    print(f"\nTHÀNH CÔNG: Đã hoàn tất quá trình ghi dữ liệu. Tổng số bản ghi xử lý: {total_records}")
+
+    # 4. Hiển thị toàn bộ data[].data[] ra màn hình console (Theo yêu cầu)
+    print("\n--- TOÀN BỘ DỮ LIỆU ĐÃ TRÍCH XUẤT (CONSOLE OUTPUT) ---")
+    for series in restructured_data:
+        series_name = series['name']
+        series_data = series['data']
+        
+        print(f"\n[SERIES: {series_name}] - Tổng số điểm dữ liệu: {len(series_data)}")
+        
+        # In tối đa 10 bản ghi đầu tiên
+        display_count = min(len(series_data), 10) 
+        
+        if display_count > 0:
+            for i in range(display_count):
+                record = series_data[i]
+                # Cố gắng in ra giá trị và thời gian
+                print(f"    - Thời gian: {record.get('time', 'N/A')}, Giá trị: {record.get('value', 'N/A')}")
+        
+        if len(series_data) > display_count:
+             print(f"  ... ({len(series_data) - display_count} bản ghi còn lại)")
+    
+    print("-----------------------------------------------------")
+    
+    # 5. Đóng kết nối     
+    DBClose()

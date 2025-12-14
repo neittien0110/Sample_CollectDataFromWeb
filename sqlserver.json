@@ -1,0 +1,3 @@
+{
+    "ConnectionString": "DRIVER=SQL Server;SERVER=sqlserver.toolhub.app;DATABASE=demo;UID=.....;PWD=......;encrypt=true;trustServerCertificate=true"
+}
